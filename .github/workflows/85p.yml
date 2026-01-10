@@ -82,6 +82,7 @@ jobs:
         echo "CONFIG_FIRMWARE_INCLUDE_ALIDDNS=y" >> .config #aliddns
         ##科学上网##
         echo "CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS=y" >> .config
+        echo "CONFIG_FIRMWARE_INCLUDE_SSOBFS=y" >> .config # simple-obfs混淆插件
         #echo "CONFIG_FIRMWARE_INCLUDE_V2RAY=n" >> .config
         echo "CONFIG_FIRMWARE_INCLUDE_XRAY=n" >> .config
         echo "CONFIG_FIRMWARE_INCLUDE_TROJAN=n" >> .config
