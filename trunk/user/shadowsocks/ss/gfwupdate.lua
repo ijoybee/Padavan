@@ -13,7 +13,9 @@ local function base64Decode(text)
 	text = text:gsub("_", "/")
 	text = text:gsub("-", "+")
 	local mod4 = #text % 4
-	text = text .. string.sub('====', mod4 + 1)
+	if mod4 > 0 then
+        text = text .. string.sub('====', mod4 + 1)
+    end
 	local result = b64decode(text)
 	
 	if result then
