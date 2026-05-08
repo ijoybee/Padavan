@@ -8,6 +8,7 @@ local b64decode = nixio.bin.b64decode
 local function base64Decode(text)
 	local raw = text
 	if not text then return '' end
+	text = text:gsub("%s", "")
 	text = text:gsub("%z", "")
 	text = text:gsub("_", "/")
 	text = text:gsub("-", "+")
