@@ -1254,7 +1254,17 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 					document.getElementById('service_name').value = queryParam.serviceName;
 					document.getElementById('multi_mode').value = queryParam.mode;
 				}
-				
+				// === 新增：解析 XHTTP 传输协议参数 开始 ===
+				if (queryParam.type == "xhttp") {
+					document.getElementById('v2_http_host').value = queryParam.host || "";
+					document.getElementById('v2_http_path').value = queryParam.path || "/";
+					
+					// 兼容网页 select 选项中 auto 值为空字符串的设定
+					var xmode = queryParam.mode || "";
+					if (xmode === "auto") { xmode = ""; }
+					document.getElementById('v2_xhttp_mode').value = xmode;
+				}
+				// === 新增：解析 XHTTP 传输协议参数 结束 ===
 				if (queryParam.flow != undefined) {
 					if(queryParam.flow == 'xtls-rprx-vision'){
 						document.getElementById('v2_flow').value = '1';
