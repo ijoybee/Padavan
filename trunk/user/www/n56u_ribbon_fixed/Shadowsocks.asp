@@ -1294,6 +1294,17 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 					document.getElementById('ssp_insecure').value = 0;
 					document.getElementById('ssp_insecure').checked = false;
 					document.getElementById('ssp_tls_host').value = queryParam.sni || serverPart[0];
+					// === 新增：解析并填入 Reality 相关参数 开始 ===
+					if (queryParam.pbk != undefined) {
+						document.getElementById('v2_public_key').value = queryParam.pbk;
+					}
+					if (queryParam.sid != undefined) {
+						document.getElementById('v2_short_id').value = queryParam.sid;
+					}
+					if (queryParam.spx != undefined) {
+						document.getElementById('v2_spiderx').value = queryParam.spx;
+					}
+					// === 新增：解析并填入 Reality 相关参数 结束 ===
 				}
 				s.innerHTML = "<font color='green'>导入Xray配置信息成功</font>";
 				return false;
