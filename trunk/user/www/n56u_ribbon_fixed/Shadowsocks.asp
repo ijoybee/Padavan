@@ -283,6 +283,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 			}
 		}
 		function switch_v2_type() {
+			showhide_div('row_v2_xhttp_mode', 0);
 			showhide_div('row_quic_header', 0);
 			showhide_div('row_quic_key', 0);
 			showhide_div('row_quic_security', 0);
