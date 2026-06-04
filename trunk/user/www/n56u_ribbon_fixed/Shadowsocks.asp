@@ -1477,6 +1477,14 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 					coustom: "1",
 				}
 			}
+			// === 新增：JSON 瘦身逻辑 开始 ===
+			for (var key in DataObj) {
+				// 剔除空字符串、null、undefined，以及前端下拉框默认表示未配置的 "none"
+				if (DataObj[key] === "" || DataObj[key] === null || DataObj[key] === undefined || DataObj[key] === "none") {
+					delete DataObj[key];
+				}
+			}
+			// === 新增：JSON 瘦身逻辑 结束 ===
 			var post_dbus = JSON.stringify(DataObj)
 			var ids;
 			if (editing_ss_id == 0) {  
