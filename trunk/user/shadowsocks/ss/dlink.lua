@@ -198,41 +198,54 @@ local function processData(szType, content)
 		result.alias = UrlDecode(alias)
 		result.type = "xray"
 		result.server = host[1]
-		-- 按照官方的建议 默认验证ssl证书
+		-- 默认参数初始化
 		result.insecure = "0"
 		result.security = "none"
-		result.tls = "1"
+		result.tls = "0"
+		
 		if host[2]:find("?") then
 			local query = split(host[2], "?")
 			result.server_port = query[1]
 			local params = {}
 			for _, v in pairs(split(UrlDecode(query[2]), '&')) do
 				local t = split(v, '=')
-				params[t[1]] = t[2]
+				params[t[1]] = t[2] or ""
 			end
 			
-			
-			result.transport = params.type --vless的传输方式tcp/kcp/ws/http/quic
+			result.transport = params.type -- 提取底层传输方式
 			result.network = params.type
 			
-			if result.transport == 'ws' then
+			-- 根据附件新增的 grpc 协议配置
+			if result.transport == 'grpc' then
+				result.service_name = params.serviceName
+				result.multi_mode = params.mode
+			end
+			
+			-- 根据附件更新的 ws 与 httpupgrade 配置
+			if result.transport == 'ws' or result.transport == 'httpupgrade' then
 				result.ws_host = params.host
 				result.ws_path = params.path
 			end
+			
+			-- 根据附件更新的 h2 配置
 			if result.transport == 'h2' then
 				result.h2_host = params.host
 				result.h2_path = params.path
 			end
-			if result.transport == 'tcp' then
+			
+			-- 根据附件新增的 xhttp 与 tcp 配置
+			if result.transport == 'tcp' or result.transport == 'xhttp' then
 				if params.type and params.type ~= "http" then
 					params.type = "none"
 				end
 				result.tcp_guise = params.type
 				result.http_host = params.host
 				result.http_path = params.path
+				result.mode = params.mode
 			end
+			
 			if result.transport == 'kcp' then
-				result.kcp_guise = params.type
+				result.kcp_guise = params.headerType or params.type
 				result.mtu = 1350
 				result.tti = 50
 				result.uplink_capacity = 5
@@ -240,35 +253,41 @@ local function processData(szType, content)
 				result.read_buffer_size = 2
 				result.write_buffer_size = 2
 			end
+			
 			if result.transport == 'quic' then
-				result.quic_guise = params.type
+				result.quic_guise = params.headerType or params.type
 				result.quic_key = params.key
-				result.quic_security = params.security
+				result.quic_security = params.quicSecurity or params.security
 			end
+			
 			if params.encryption then
-				result.security = params.encryption --vless security默认none
+				result.security = params.encryption
 			end
-			if params.security == "tls" or params.security == "1" then --传输层security
+			
+			-- 提取公共的 TLS/Reality 指纹及 SNI 参数
+			result.tls_host = params.sni
+			result.tls_fp = params.fp
+			result.flow = params.flow
+			
+			-- 根据附件处理 TLS 与 Reality 逻辑
+			if params.security == "tls" or params.security == "1" then
 				result.tls = "1"
-				result.tls_host = params.host
-				result.insecure = 0
-				result.flow = "0"
-			elseif params.security == "xtls" or params.security == "2" then
+			elseif params.security == "reality" or params.security == "2" then
 				result.tls = "2"
-				result.tls_host = params.host
-				result.insecure = 0
-				if params.flow == "xtls-rprx-splice" then
-					result.flow = "2"
-				else
-					result.flow = "1"
-				end
+				result.public_key = params.pbk
+				result.short_id = params.sid
+				result.spiderx = params.spx
 			else
 				result.tls = "0"
+			end
+			
+			if params.allowInsecure == "1" then
+				result.insecure = "1"
 			end
 		else
 			result.server_port = host[2]
 		end
-		result.alter_id = 0 --设为level
+		result.alter_id = 0
 		result.vmess_id = password
 	elseif szType == "ss" then
 		local idx_sp = 0
