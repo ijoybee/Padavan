@@ -269,6 +269,40 @@ local function processData(szType, content)
 			result.tls_fp = params.fp
 			result.flow = params.flow
 			
+			-- 适配 Web UI 的 flow_id 映射
+			if params.flow == "xtls-rprx-vision" then
+				result.flow_id = "1"
+			elseif params.flow == "xtls-rprx-vision-udp443" then
+				result.flow_id = "2"
+			else
+				result.flow_id = "0"
+			end
+			
+			-- 适配 Web UI 的 tls_fp_id 映射
+			if params.fp == "chrome" then
+				result.tls_fp_id = "1"
+			elseif params.fp == "firefox" then
+				result.tls_fp_id = "2"
+			elseif params.fp == "safari" then
+				result.tls_fp_id = "3"
+			elseif params.fp == "ios" then
+				result.tls_fp_id = "4"
+			elseif params.fp == "android" then
+				result.tls_fp_id = "5"
+			elseif params.fp == "edge" then
+				result.tls_fp_id = "6"
+			elseif params.fp == "360" then
+				result.tls_fp_id = "7"
+			elseif params.fp == "qq" then
+				result.tls_fp_id = "8"
+			elseif params.fp == "random" then
+				result.tls_fp_id = "9"
+			elseif params.fp == "randomized" then
+				result.tls_fp_id = "10"
+			else
+				result.tls_fp_id = "0"
+			end
+			
 			-- 根据附件处理 TLS 与 Reality 逻辑
 			if params.security == "tls" or params.security == "1" then
 				result.tls = "1"
