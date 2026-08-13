@@ -443,7 +443,7 @@ end
 -- wget
 local function wget(url)
 	--local stdout = io.popen('curl -k -s --connect-timeout 15 --retry 5 "' .. url .. '"')
-	local stdout = io.popen('curl -k -s -A "v2rayN/7.24.4" --connect-timeout 15 --retry 5 "' .. url .. '"')
+	local stdout = io.popen('curl -k -s -A "v2rayN/7.24.0" --connect-timeout 15 --retry 5 "' .. url .. '"')
 	local sresult = stdout:read("*all")
     return trim(sresult)
 end
